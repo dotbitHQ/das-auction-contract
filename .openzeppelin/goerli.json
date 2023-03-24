@@ -1,0 +1,421 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x0818C6c38DB1dd7B5dfFc72F90e0D5489654987b",
+    "txHash": "0x07e2be19c80dfbd53b1e272c9741bb8f06fc6232b0ec287e1b66bf16cc9679ed"
+  },
+  "proxies": [
+    {
+      "address": "0xc89b31c623A4c5e0bf4cd87fC2D212A3D88cE7d6",
+      "txHash": "0xbf238ae2a08680b6ca39eac8a09db9f8b56441f60ff70acaaff2c58f880601bc",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0E6e6c8548866D0A359DbD00d51Df404721B5ce6",
+      "txHash": "0x8a5638e574cf067040741c3f73c5e9ec48d91fcdd41a30b1b3f72ba565b48191",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "67c2de128078fcd5a329e643339c36461dc80cfa825b3070aac653773cf380f3": {
+      "address": "0x849F0f013a24E9b67149adb9caD507a7E2CcbfDB",
+      "txHash": "0x6f1b8646169c861c0650c6da2cb805855898c93c0a88dd67b7b71566bfec26ef",
+      "layout": {
+        "solcVersion": "0.8.9",
+        "storage": [
+          {
+            "label": "GRACE_PERIOD",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:10"
+          },
+          {
+            "label": "startPremium",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:11"
+          },
+          {
+            "label": "endValue",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:12"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:32"
+          },
+          {
+            "label": "root",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_bytes32",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:33"
+          },
+          {
+            "label": "bidStatus",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_string_memory_ptr,t_bool)",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:33"
+          },
+          {
+            "label": "usdOracle",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_contract(AggregatorInterface)7",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:35"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(AggregatorInterface)7": {
+            "label": "contract AggregatorInterface",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_string_memory_ptr,t_bool)": {
+            "label": "mapping(string => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string"
+          }
+        }
+      }
+    },
+    "8a803ec3d9465944a78f414c854f0b58782008ff5e9ac27edda8371698c5a5b3": {
+      "address": "0x69978B7af28cDE33DFc4D9dB7a4EFdc5cC49d025",
+      "txHash": "0xbea887e1448b45c60a1fa5b8b4dda1e32dc2594dffb17613da6be523bf7c1d5f",
+      "layout": {
+        "solcVersion": "0.8.9",
+        "storage": [
+          {
+            "label": "GRACE_PERIOD",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:10"
+          },
+          {
+            "label": "startPremium",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:11"
+          },
+          {
+            "label": "endValue",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:12"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:32"
+          },
+          {
+            "label": "root",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_bytes32",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:33"
+          },
+          {
+            "label": "bidStatus",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_string_memory_ptr,t_bool)",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:33"
+          },
+          {
+            "label": "usdOracle",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_contract(AggregatorInterface)7",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:35"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(AggregatorInterface)7": {
+            "label": "contract AggregatorInterface",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_string_memory_ptr,t_bool)": {
+            "label": "mapping(string => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string"
+          }
+        }
+      }
+    },
+    "94564c3b7381d76ac26bc786827ad5726227ab212f8782703677c71c0b5d3a74": {
+      "address": "0x205346B4064B3674548199b23d2B609544F2F4A5",
+      "txHash": "0x5d8b56d6d57180af9f2a4b9eff32c7580f112ae02d7ac359f6c80eaf0b6ca0b4",
+      "layout": {
+        "solcVersion": "0.8.9",
+        "storage": [
+          {
+            "label": "GRACE_PERIOD",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:10"
+          },
+          {
+            "label": "startPremium",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:11"
+          },
+          {
+            "label": "endValue",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:12"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:32"
+          },
+          {
+            "label": "root",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_bytes32",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:33"
+          },
+          {
+            "label": "bidStatus",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_string_memory_ptr,t_bool)",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:33"
+          },
+          {
+            "label": "usdOracle",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_contract(AggregatorInterface)7",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:35"
+          },
+          {
+            "label": "aa",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:57"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(AggregatorInterface)7": {
+            "label": "contract AggregatorInterface",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_string_memory_ptr,t_bool)": {
+            "label": "mapping(string => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string"
+          }
+        }
+      }
+    },
+    "6d3a9a9a2998dc637fe9bbf67c7ccd0093ffce0b63084f7e10d25682d2256b30": {
+      "address": "0x1c91C6d0340F6bCf5Ee9D032B576a9538c56B7E2",
+      "txHash": "0x3f9e5585bde703df4abf3368095622f7c1fedb11fa1337380fa1c41006f52348",
+      "layout": {
+        "solcVersion": "0.8.9",
+        "storage": [
+          {
+            "label": "GRACE_PERIOD",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:10"
+          },
+          {
+            "label": "startPremium",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:11"
+          },
+          {
+            "label": "endValue",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_uint256",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:12"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_address",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:32"
+          },
+          {
+            "label": "root",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_bytes32",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:33"
+          },
+          {
+            "label": "bidStatus",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_mapping(t_string_memory_ptr,t_bool)",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:33"
+          },
+          {
+            "label": "usdOracle",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_contract(AggregatorInterface)7",
+            "contract": "auction",
+            "src": "contracts/Auction.sol:35"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_contract(AggregatorInterface)7": {
+            "label": "contract AggregatorInterface",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_string_memory_ptr,t_bool)": {
+            "label": "mapping(string => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_string_memory_ptr": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string"
+          }
+        }
+      }
+    }
+  }
+}
