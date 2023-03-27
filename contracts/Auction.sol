@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
-
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 //chainlink
 interface AggregatorInterface {
     function latestAnswer() external view returns (int256);
 }
 
-contract auction {
+contract auction is Initializable, UUPSUpgradeable, OwnableUpgradeable {
     uint256 GRACE_PERIOD ; //宽限期
     uint256 public  startPremium; //初始溢价 单位:美元
     uint256 public  endValue; //结束溢价 单位:美元
     uint256 constant public PRECISION = 1e18;
-    uint256 constant public bit1 = 999989423469314432; // 0.5 ^ 1/65536 * (10 ** 18)
+    uint256 constant bit1 = 999989423469314432; // 0.5 ^ 1/65536 * (10 ** 18)
     uint256 constant bit2 = 999978847050491904; // 0.5 ^ 2/65536 * (10 ** 18)
     uint256 constant bit3 = 999957694548431104;
     uint256 constant bit4 = 999915390886613504;
@@ -28,7 +30,7 @@ contract auction {
     uint256 constant bit15 = 840896415253714560;
     uint256 constant bit16 = 707106781186547584;
 
-    address public owner;
+
     bytes32 public root;
     mapping(string => bool) public bidStatus;
     AggregatorInterface public usdOracle;
@@ -39,18 +41,18 @@ contract auction {
         uint256 bid_time
     );
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "You aren't the owner");
-        _;
-    }
-
-  function init(AggregatorInterface _usdOracle,uint256 _startPremium,uint256 _totalDays) public {
+    function initialize(AggregatorInterface _usdOracle,uint256 _startPremium,uint256 _totalDays) initializer public {
         usdOracle = _usdOracle;
-        owner = msg.sender;
         startPremium = _startPremium;
         GRACE_PERIOD = 90 days;
         endValue = _startPremium >> _totalDays;
-  }
+      __Ownable_init();
+      __UUPSUpgradeable_init();
+    }
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() initializer {}
+
+    function _authorizeUpgrade(address) internal override onlyOwner {}
 
     //更新根hash（上架）
     function onSale(
