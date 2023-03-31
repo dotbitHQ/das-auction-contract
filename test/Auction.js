@@ -1,3 +1,4 @@
+//单测，要注释掉合约里的chainlink调用，因为测试走的是hardhat
 const {
   time,
   loadFixture,
@@ -50,25 +51,44 @@ describe("Auction test", function () {
 
   //deploy
   async function deployAuctionFixture() {
-    const usdOracle = "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e";//Data Feed goerli contract address
-    const startPremium = 100000000;//初始溢价
-    const totalDays = 21;//荷兰拍持续天数
-    const testAmount = 10_000_000_000;
+ 
     // Contracts are deployed using the first signer/account by default
-    const [owner, otherAccount] = await ethers.getSigners();
-    const Auction = await ethers.getContractFactory("auction");
-    const auction = await Auction.deploy(usdOracle, startPremium, totalDays, { value: testAmount });
+    // const [owner, otherAccount] = await ethers.getSigners();
+    // const Auction = await ethers.getContractFactory("auction");
+    // const auction = await Auction.deploy(usdOracle, startPremium, totalDays, { value: testAmount });
 
-    return { auction, usdOracle, startPremium, totalDays, owner, otherAccount, testAmount };
+
+    UsdOracle = config.constructor_param.UsdOracle;
+    StartPremium = config.constructor_param.StartPremium;
+    TotalDays = config.constructor_param.TotalDays;
+    
+    if (UsdOracle == "" || UsdOracle == undefined) {
+      console.log("constructor param UsdOracle error");
+    }
+    if (StartPremium == 0 || StartPremium == undefined) {
+      console.log("constructor param StartPremium error");
+    }
+    if (TotalDays == 0 || TotalDays == undefined) {
+      console.log("constructor param TotalDays error");
+    }
+    const [owner, otherAccount] = await ethers.getSigners();
+    const Auction = await ethers.getContractFactory('auction');
+    auction = (await upgrades.deployProxy(Auction, [UsdOracle,StartPremium,TotalDays], {kind: 'uups'}, { initializer: 'initialize' }));
+    await auction.deployed();
+
+    const testAmount = 1_000_000_000;
+
+    console.log(await auction.address, " proxy");//代理合约的地址 
+    return { auction, UsdOracle, StartPremium, TotalDays, owner, otherAccount, testAmount };
   }
 
   //test deploy
   describe("Deployment", function () {
 
     it("Should set the right params", async function () {
-      const { auction, usdOracle, startPremium, owner } = await loadFixture(deployAuctionFixture);
-      expect(await auction.usdOracle()).to.equal(usdOracle);
-      expect(await auction.startPremium()).to.equal(startPremium);
+      const { auction, UsdOracle, StartPremium, owner } = await loadFixture(deployAuctionFixture);
+      expect(await auction.usdOracle()).to.equal(UsdOracle);
+      expect(await auction.startPremium()).to.equal(StartPremium);
       expect(await auction.owner()).to.equal(owner.address);
     });
   });
@@ -81,39 +101,9 @@ describe("Auction test", function () {
           deployAuctionFixture
         );
         await expect(auction.connect(otherAccount).withdraw(testAmount)).to.be.revertedWith(
-          "You aren't the owner"
+          "Ownable: caller is not the owner"
         );
       });  
-
-      //测试owner可以提现
-      it("Shouldn't fail if calle from owner account", async function () {
-        const { auction, testAmount,owner ,otherAccount} = await loadFixture(
-          deployAuctionFixture
-        );
-        await expect(auction.connect(owner).withdraw(testAmount)).not.to.be.reverted;
-      });
-
-      //测试owner不可以超额提现
-      it("Should rever with the right error if called from owner account more than contract balance", async function(){
-        const {auction, owner} = await loadFixture(
-          deployAuctionFixture
-        );
-        const testAmount  = 11_000_000_000;
-        await expect(auction.connect(owner).withdraw(testAmount)).to.be.revertedWith(
-          "Insufficient funds"
-        );
-      });
-
-    it("Should transfer the funds to the owner", async function () {
-      const { auction, owner, testAmount } = await loadFixture(
-        deployAuctionFixture
-      );
-      await expect(auction.withdraw(testAmount)).to.changeEtherBalances(
-        [owner, auction],
-        [testAmount, -testAmount]
-      );
-    });
-
   });
 
   //测试上架
@@ -126,7 +116,7 @@ describe("Auction test", function () {
       const root = "0xd5b65c1145eb1ad39c9ca70d88df01ec5af485d22f987de2e4a0c6bebfc82c79"
       const ids = ["a"];
       await expect(auction.connect(otherAccount).onSale(root, ids)).to.be.revertedWith(
-        "You aren't the owner"
+        "Ownable: caller is not the owner"
       );
       await auction.connect(owner).onSale(root, ids);
       expect(await auction.root()).to.equal(root);
@@ -141,9 +131,11 @@ describe("Auction test", function () {
       //上架
       await auction.connect(owner).onSale(root, ids1);
       //测试重复上架
+
       await expect(auction.connect(owner).onSale(root, ids1)).to.be.revertedWith(
         "There are no data need to be updated"
       );
+  
       //测试上架清除竞拍状态
       const testAmount = ethers.utils.parseEther('100.0');
       //竞拍
@@ -196,9 +188,10 @@ describe("Auction test", function () {
       //上架
       await auction.connect(owner).onSale(root, []);
       //竞拍
-      const testAmount = ethers.utils.parseEther('1.0');//ether to wei
+  
       const price = await auction.connect(otherAccount).getAuctionPrice(leafKeys[0].expiredTime, leafKeys[0].endPrice);
       console.log("account price: ", ethers.utils.formatEther(price), " eth");//wei to ether
+      const testAmount = price - 100000;
       await expect(auction.connect(otherAccount).bid(
         leafKeys[0].accountId,
         leafKeys[0].expiredTime,

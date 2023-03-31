@@ -4,6 +4,11 @@
     * [Bid](#Bid)
     
 ## API List
+* contract address
+```
+  goerli: 0xF6674593b38dCE13c9525264EfDaFA141f5f1dBC
+  main: 
+```
 
 ### GetAuctionPrice
 **desc**
@@ -14,11 +19,6 @@
 * functionname
 ```
 "3bf6cebb": "getAuctionPrice(uint256,uint256)"
-```
-* contract address
-```
-  goerli: 0x64273552516A1EC3559F87707b0C50908cb839dE
-  main: 
 ```
 * output data
 ```
@@ -43,11 +43,7 @@
 ```
    "e96bb91d": "bid(string,uint256,uint256,bytes32[])"
 ```
-* contract address
-```
-  goerli: 0x64273552516A1EC3559F87707b0C50908cb839dE
-  main: 
-```
+
 * output data
 ```
     account_id: "0x9a37b7d825c217cb304123d58d73e1054e777043"

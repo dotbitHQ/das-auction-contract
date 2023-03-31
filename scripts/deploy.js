@@ -16,6 +16,7 @@ async function main() {
   }
   const Auction = await ethers.getContractFactory('auction');
   proxy = (await upgrades.deployProxy(Auction, [UsdOracle,StartPremium,TotalDays], {kind: 'uups'}, { initializer: 'initialize' }));
+  await proxy.deployed();
   console.log(await proxy.address, " proxy");//代理合约的地址 
   console.log(await upgrades.erc1967.getImplementationAddress(proxy.address)," getImplementationAddress")//逻辑合约地址
   //uups模式下没有代理管理合约：所以调用此方法的结果是0x0000000000000000000000000000000000000000
@@ -26,3 +27,6 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
+
+
+
