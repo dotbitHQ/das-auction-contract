@@ -6,7 +6,7 @@
 ## API List
 * contract address
 ```
-  goerli: 0xF6674593b38dCE13c9525264EfDaFA141f5f1dBC
+  goerli: 0xd30bb473B2abfe7b36A7bA8ACB5A74B97A5436b6
   main: 
 ```
 
@@ -46,9 +46,15 @@
 
 * output data
 ```
+  account_id: .bit account id
+  expired_time: .bit expired_time
+  basic_price: .bit basic price, 
+  
+```
+```
     account_id: "0x9a37b7d825c217cb304123d58d73e1054e777043"
     expired_time: 1670257878
-    basic_price: 602
+    basic_price: 605256000
     proof: [
             "0x08babd9938f918897b97fe3aa8a3bb1bc7dfdb890790628220483c4c65954c17",
             "0x8f5b4ee845254e25da04793dd0875edcb5ed5bf1f2805dbf2f7be554ef1006f6",

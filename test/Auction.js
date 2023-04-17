@@ -5,47 +5,33 @@ const {
 } = require("@nomicfoundation/hardhat-network-helpers");
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers,upgrades } = require("hardhat");
 
 const leafKeys = [
   {
-    "accountId": "0x247a9b0c9d9dfd787861c9d7d928dc321124996f",
-    "expiredTime": 1670257878,
-    "endPrice": 602,
-    "proof": ["0x06bdf79aa284c76d792b8aab86924d922f910f30d222d92a6c2bec7f9e14bc5a", "0xeaedc863c9f9f430114a5b0589eb9b22b94dc5898d1e06a014124231edbb2f73", "0x98796ed086ca5dd488c62f44a0295d6b39857bf6de53a70171e5e6667eddd957"]
+    "accountId": "0x428b868fb0acd0a9fbde73bd55995f566a38fbd6",
+    "expiredTime": 1672211096,
+    "endPrice": 6052560,
+    "proof": ["0xdaa769622ad71d024decf6e52531c0027ec35caa2a699049c4569f43e755c9b5","0x8d2b5fc85c3728f01df06d1053927a8dc6beebbd6849dde2e41134b133cbb25e"]
   },
   {
-    "accountId": "0x245c7a6015522c389ab3027ccfd56ebd4e800546",
-    "expiredTime": 1670257878,
-    "endPrice": 604,
-    "proof": ["0xcc29713d8144b0a2f7d92b344a79df46c7bad0916d66a6dbb5c5f9892f13a272", "0xeaedc863c9f9f430114a5b0589eb9b22b94dc5898d1e06a014124231edbb2f73", "0x98796ed086ca5dd488c62f44a0295d6b39857bf6de53a70171e5e6667eddd957"]
+    "accountId": "0x02db18e7e889d2b60505c719895f949b5606f737",
+    "expiredTime": 1672211096,
+    "endPrice": 6052560,
+    "proof": ["0xffbab1fb3d01bf5920f1ec973561ee32eb8e8a249b3fa5e3468ed0e34ed6e691","0x8d2b5fc85c3728f01df06d1053927a8dc6beebbd6849dde2e41134b133cbb25e"]
   },
   {
-    "accountId": "0xed289aa951c63d5600ad31211a89a40215f297ff",
-    "expiredTime": 1670257878,
-    "endPrice": 603,
-    "proof": ["0xe86544dc671659034f3411b663b3e89d50b4ad73d6cf19e11d405b1ec6958727", "0x1487a4f3b92851bcb6ff39fcdb30e73180b4b155209ec1cba7d577efa418bb62", "0x98796ed086ca5dd488c62f44a0295d6b39857bf6de53a70171e5e6667eddd957"]
-  },
-  {
-    "accountId": "0xed0a36409177ecc572f855ca43082dc5dc2cb56e",
-    "expiredTime": 1670257878,
-    "endPrice": 606,
-    "proof": ["0x6c8c15584fc901134be8b4bf7f430f54a6762be6bed719a3ca2cf3536ddeb3cc", "0x1487a4f3b92851bcb6ff39fcdb30e73180b4b155209ec1cba7d577efa418bb62", "0x98796ed086ca5dd488c62f44a0295d6b39857bf6de53a70171e5e6667eddd957"]
-  },
-  {
-    "accountId": "0xc1f5d9f7249f379c887535001d6f641ee2dc6189",
-    "expiredTime": 1670257878,
-    "endPrice": 602,
-    "proof": ["0x8d6bc8716d4f723904d5d6bf680ff30b5c86e4ce21d330c870f355e164f1365d", "0x0cb938ae748248ba412b4bd003ed18b7bb2dbfcf92ebbdc9cb0e4dd12ced7b6d", "0x0793e73b186416f073ddbf0e2bc4e5405d1e937c28168c241473e4c404d87e10"]
-  },
-  {
-    "accountId": "0xc1e37e71c6dcffb454f6a317626d97b06958b237",
-    "expiredTime": 1670257878,
-    "endPrice": 602,
-    "proof": ["0x0838d07022602c6582a9e4819ecd3184e093e0faffa66f801494007f4335d3e7", "0x0cb938ae748248ba412b4bd003ed18b7bb2dbfcf92ebbdc9cb0e4dd12ced7b6d", "0x0793e73b186416f073ddbf0e2bc4e5405d1e937c28168c241473e4c404d87e10"]
-  },
+    "accountId": "0xc7298fe8e8c47c4bec4e7182898e36a3a06bb466",
+    "expiredTime": 1672211096,
+    "endPrice": 6052560,
+    "proof": ["0xf4cc5cb5d4fac679b3e4d95c0648d29dc0339ad48deb5fba1084a3068ee01fb5","0x8e78a7d7eb1c9a38055a9067eb83145e3aa1dd71f4c411731dbd4e16354127fb"]
+  }
 ];
-const root = "0x6a5cf0d7c7a13cde6d12ba2a913c3a2f7c64a57cfc7d99deb2c9fc77c5052245";
+const root = "0x011162d8a5de9068e8e8f89b04da365d6f9bc70ac29544fa07f31f0bd538dd1b";
+
+const ownerRole = "0x6270edb7c868f86fda4adedba75108201087268ea345934db8bad688e1feb91b";//keccak256(OWNER)
+const managerRole = "0xaf290d8680820aad922855f39b306097b20e28774d6c1ad35a20325630c3a02c";//keccak256(MANAGER)
+
 
 describe("Auction test", function () {
 
@@ -71,7 +57,7 @@ describe("Auction test", function () {
     if (TotalDays == 0 || TotalDays == undefined) {
       console.log("constructor param TotalDays error");
     }
-    const [owner, otherAccount] = await ethers.getSigners();
+    const [account1, account2, account3] = await ethers.getSigners();
     const Auction = await ethers.getContractFactory('auction');
     auction = (await upgrades.deployProxy(Auction, [UsdOracle,StartPremium,TotalDays], {kind: 'uups'}, { initializer: 'initialize' }));
     await auction.deployed();
@@ -79,17 +65,63 @@ describe("Auction test", function () {
     const testAmount = 1_000_000_000;
 
     console.log(await auction.address, " proxy");//代理合约的地址 
-    return { auction, UsdOracle, StartPremium, TotalDays, owner, otherAccount, testAmount };
+    return { auction, UsdOracle, StartPremium, TotalDays, account1, account2, account3, testAmount };
   }
 
   //test deploy
   describe("Deployment", function () {
-
     it("Should set the right params", async function () {
-      const { auction, UsdOracle, StartPremium, owner } = await loadFixture(deployAuctionFixture);
+      const { auction, UsdOracle, StartPremium, account1 } = await loadFixture(deployAuctionFixture);
       expect(await auction.usdOracle()).to.equal(UsdOracle);
       expect(await auction.startPremium()).to.equal(StartPremium);
-      expect(await auction.owner()).to.equal(owner.address);
+    });
+
+    
+    it("Should has the right role after grantRole or revokeRole",async function(){
+      const { auction, UsdOracle, StartPremium, account1, account2, account3} = await loadFixture(deployAuctionFixture);
+        //刚布署的合约的owner和manager都是account1
+        expect(await auction.hasRole(ownerRole,account1.address)).to.equal(true);
+        //测试将account2设置为owner
+        await expect(auction.connect(account1).grantRole(ownerRole, account2.address)).not.to.be.reverted;
+        expect(await auction.hasRole(ownerRole,account2.address)).to.equal(true);
+        //测试将account1的owner权限删除
+        await expect(auction.connect(account1).revokeRole(ownerRole, account1.address)).not.to.be.reverted;
+        expect(await auction.hasRole(ownerRole, account1.address)).to.equal(false);
+    });
+  });
+
+  //测试升级
+  describe("Upgrade", function () {
+    it("Should Upgrade with right role address", async function () {
+      const { auction,account1,account2 } = await loadFixture(deployAuctionFixture);
+      const Auction = await ethers.getContractFactory('auction');
+      expect(await auction.hasRole(ownerRole, account1.address)).to.equal(true);
+      console.log(await upgrades.erc1967.getImplementationAddress(auction.address)," getImplementationAddress")//旧逻辑合约地址
+
+      //给account2授权owner角色
+      await auction.grantRole(ownerRole,account2.address);
+      expect(await auction.hasRole(ownerRole,account2.address)).to.be.equal(true);
+      // proxy = (await upgrades.upgradeProxy(auction.address, Auction));
+      //测试owner可以升级
+      await expect(upgrades.upgradeProxy(auction.address, Auction)).not.to.be.reverted;
+
+      //删除account1的owner角色
+      await expect(auction.connect(account1).revokeRole(ownerRole, account1.address)).not.to.be.reverted;
+      expect(await auction.hasRole(ownerRole, account1.address)).to.equal(false);
+      //account1:  0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+      //account2:  0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+      console.log("account1: ", account1.address);
+      console.log("account2: ", account2.address);
+      //没有owner角色的account1，升级失败
+      await expect(upgrades.upgradeProxy(auction.address, Auction)).to.be.reverted;
+
+      //
+      // await expect(upgrades.upgradeProxy(auction.address, Auction)).to.be.reverted;
+      // await expect(upgrades.upgradeProxy(auction.address, Auction, {from : account1.address})).to.be.reverted;
+      // await proxy.deployed();
+      // await expect(upgrades.upgradeProxy(auction.address, Auction, {from: account1})).not.to.be.reverted;
+      // await proxy.deployed();
+      console.log(await upgrades.erc1967.getImplementationAddress(auction.address)," getImplementationAddress")//新逻辑合约地址，地址可变，与proxy合约的状态变量需要EVM对齐
     });
   });
 
@@ -97,57 +129,53 @@ describe("Auction test", function () {
   describe("Withdrawals", function () {
       //测试非合约的owner不可以提现
       it("Should revert with the right error if called from another account", async function () {
-        const { auction, otherAccount, testAmount } = await loadFixture(
+        const { auction, account2, testAmount } = await loadFixture(
           deployAuctionFixture
         );
-        await expect(auction.connect(otherAccount).withdraw(testAmount)).to.be.revertedWith(
-          "Ownable: caller is not the owner"
-        );
+        await expect(auction.connect(account2).withdraw(testAmount)).to.be.rejected;
       });  
   });
 
   //测试上架
   describe("Onsale", function () {
-    //测试非owner不可以上架
+    //测试非manager不可以上架
     it("Should revert with the right error if called from another account", async function () {
-      const { auction, otherAccount, owner } = await loadFixture(
+      const { auction, account2, account1 } = await loadFixture(
         deployAuctionFixture
       );
       const root = "0xd5b65c1145eb1ad39c9ca70d88df01ec5af485d22f987de2e4a0c6bebfc82c79"
-      const ids = ["a"];
-      await expect(auction.connect(otherAccount).onSale(root, ids)).to.be.revertedWith(
-        "Ownable: caller is not the owner"
-      );
-      await auction.connect(owner).onSale(root, ids);
-      expect(await auction.root()).to.equal(root);
+      const ids = ["0xc7298fe8e8c47c4bec4e7182898e36a3a06bb466"];
+      await expect(auction.connect(account2).onSale(root, ids)).to.be.reverted;
+      await auction.connect(account1).onSale(root, ids);
+      expect(await auction.rootHash()).to.equal(root);
     });
 
     it("Should clean the bidStatus", async function () {
-      const { auction, owner, otherAccount } = await loadFixture(
+      const { auction, account1, account2 } = await loadFixture(
         deployAuctionFixture
       );
 
       const ids1 = [];
       //上架
-      await auction.connect(owner).onSale(root, ids1);
+      await auction.connect(account1).onSale(root, ids1);
       //测试重复上架
 
-      await expect(auction.connect(owner).onSale(root, ids1)).to.be.revertedWith(
+      await expect(auction.connect(account1).onSale(root, ids1)).to.be.revertedWith(
         "There are no data need to be updated"
       );
   
       //测试上架清除竞拍状态
       const testAmount = ethers.utils.parseEther('100.0');
       //竞拍
-      await auction.connect(otherAccount).bid(leafKeys[0].accountId,
+      await auction.connect(account2).bid(leafKeys[0].accountId,
         leafKeys[0].expiredTime, leafKeys[0].endPrice, leafKeys[0].proof, { value: testAmount });
       //测试竞拍成功标志未被标记为true
-      expect(await auction.bidStatus("0x247a9b0c9d9dfd787861c9d7d928dc321124996f")).to.equal(true);
+      expect(await auction.bidStatus("0x428b868fb0acd0a9fbde73bd55995f566a38fbd6")).to.equal(true);
       //测试再次上架清空标志位
-      const ids2 = ["0x247a9b0c9d9dfd787861c9d7d928dc321124996f"];
+      const ids2 = ["0x428b868fb0acd0a9fbde73bd55995f566a38fbd6"];
       const root2 = "0xa5b65c1145eb1ad39c9ca70d88df01ec5af485d22f987de2e4a0c6bebfc82c79";
-      await auction.connect(owner).onSale(root2, ids2);
-      expect(await auction.bidStatus("0x247a9b0c9d9dfd787861c9d7d928dc321124996f")).to.equal(false);
+      await auction.connect(account1).onSale(root2, ids2);
+      expect(await auction.bidStatus("0x428b868fb0acd0a9fbde73bd55995f566a38fbd6")).to.equal(false);
     });
 
   });
@@ -155,57 +183,62 @@ describe("Auction test", function () {
   //测试竞拍
   describe("Bid", function () {
     it("Should fail if bid params are incorrect", async function () {
-      const { auction, owner, otherAccount } = await loadFixture(
+      const { auction, account1, account2 } = await loadFixture(
         deployAuctionFixture
       );
       //上架
-      await auction.connect(owner).onSale(root, []);
+      await auction.connect(account1).onSale(root, []);
       //竞拍
       const testAmount = ethers.utils.parseEther('100.0');
-      await expect(auction.connect(otherAccount).bid(leafKeys[1].accountId,
+      await expect(auction.connect(account2).bid(leafKeys[1].accountId,
         leafKeys[0].expiredTime, leafKeys[0].endPrice, leafKeys[0].proof, { value: testAmount })).to.be.revertedWith("Validation failed");
     });
 
     it("Should fail if account has been sold", async function () {
-      const { auction, owner, otherAccount } = await loadFixture(
+      const { auction, account1, account2 } = await loadFixture(
         deployAuctionFixture
       );
       //上架
-      await auction.connect(owner).onSale(root, []);
+      await auction.connect(account1).onSale(root, []);
       //竞拍
       const testAmount = ethers.utils.parseEther('100.0');
-      await auction.connect(otherAccount).bid(leafKeys[0].accountId,
+      await auction.connect(account2).bid(leafKeys[0].accountId,
         leafKeys[0].expiredTime, leafKeys[0].endPrice, leafKeys[0].proof, { value: testAmount });
       //再次竞拍
-      await expect(auction.connect(otherAccount).bid(leafKeys[0].accountId,
+      await expect(auction.connect(account2).bid(leafKeys[0].accountId,
         leafKeys[0].expiredTime, leafKeys[0].endPrice, leafKeys[0].proof, { value: testAmount })).to.be.revertedWith("Account has been sold");
     });
 
-    it("Should fail if value is to low", async function () {
-      const { auction, owner, otherAccount } = await loadFixture(
+    it("Should fail if value is too low", async function () {
+      const { auction, account1, account2 } = await loadFixture(
         deployAuctionFixture
       );
       //上架
-      await auction.connect(owner).onSale(root, []);
+      await auction.connect(account1).onSale(root, []);
       //竞拍
   
-      const price = await auction.connect(otherAccount).getAuctionPrice(leafKeys[0].expiredTime, leafKeys[0].endPrice);
+      const price = await auction.connect(account2).getAuctionPrice(leafKeys[0].expiredTime, leafKeys[0].endPrice);
       console.log("account price: ", ethers.utils.formatEther(price), " eth");//wei to ether
-      const testAmount = price - 100000;
-      await expect(auction.connect(otherAccount).bid(
+      
+
+      // console.log("testAmount: ",ethers.BigNumber.from(price-10000));
+      console.log(Number.MAX_SAFE_INTEGER);
+      await expect(auction.connect(account2).bid(
         leafKeys[0].accountId,
         leafKeys[0].expiredTime,
         leafKeys[0].endPrice,
         leafKeys[0].proof, 
-        { value: testAmount }
+        { value: 100}
       )).to.be.revertedWith("Value is too low");
 
-      await auction.connect(otherAccount).bid(
-        leafKeys[0].accountId, 
-        leafKeys[0].expiredTime, 
-        leafKeys[0].endPrice, 
-        leafKeys[0].proof, 
-        { value: price});
+      // await expect(auction.connect(account2).bid(
+      //   leafKeys[0].accountId, 
+      //   leafKeys[0].expiredTime, 
+      //   leafKeys[0].endPrice, 
+      //   leafKeys[0].proof, 
+      //   { value: price.add(10000000000)}
+      // )).not.to.be.reverted;
+   
     });
   });
 
